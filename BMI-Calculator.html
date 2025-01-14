@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>BMI Calculator</title>
+    <style>
+      .validation-message {
+        color: red;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html"
+          ><img src="../Images/logo.png" style="width: 90px; cursor: pointer"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarScroll"
+          aria-controls="navbarScroll"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+          <ul
+            class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+            style="--bs-scroll-height: 100px"
+          >
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">about</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="components.html">components</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="resources.html">resources</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="reviews.html">reviews</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="BMI-Calculator.html">Form</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div id="datetime"></div>
+    <h1>BMI Calculator</h1>
+    <form>
+      Height (in meters): <input type="number" id="height" min="0" required />
+      <span id="heightError" class="validation-message"></span>
+      <br /><br />
+      <!-- <label for="weight">Weight (in kilograms): </label> -->
+      Weight (in kilograms):
+      <input type="number" id="weight" min="0" required />
+      <span id="weightError" class="validation-message"></span>
+      <br /><br />
+
+      <!-- <label for="gender"></label> -->
+      Gender: <input type="radio" name="gender" value="male" /> Male
+      <input type="radio" name="gender" value="female" /> Female
+      <span id="genderError" class="validation-message"></span>
+      <br /><br />
+
+      <!-- <label for="lifestyle">Lifestyle:</label> -->
+      Lifestyle:
+      <input type="checkbox" name="lifestyle" value="active" /> Active
+      <input type="checkbox" name="lifestyle" value="sedentary" /> Sedentary
+      <span id="lifestyleError" class="validation-message"></span>
+      <br /><br />
+
+      <button type="button" onclick="calculateBMI()">Calculate BMI</button>
+      <br /><br /><br />
+      <textarea
+        name="message"
+        rows="10"
+        cols="30"
+        id="result"
+        readonly
+      ></textarea>
+    </form>
+
+    <script>
+      function calculateBMI() {
+        console.log("calculateBMI function is called");
+        var heightError = document.getElementById("heightError");
+        var weightError = document.getElementById("weightError");
+        var genderError = document.getElementById("genderError");
+        var lifestyleError = document.getElementById("lifestyleError");
+
+        heightError.textContent = "";
+        weightError.textContent = "";
+        genderError.textContent = "";
+        lifestyleError.textContent = "";
+        
+        var heightInput = document.getElementById("height").value;
+        var weightInput = document.getElementById("weight").value;
+        var genderInput = document.querySelector(
+          'input[name="gender"]:checked'
+        );
+        var lifestyleInputs = document.querySelectorAll(
+          'input[name="lifestyle"]:checked'
+        );
+
+        if (
+          !heightInput ||
+          isNaN(heightInput) ||
+          parseFloat(heightInput) <= 0
+        ) {
+          heightError.textContent = "[!] Enter a valid positive height";
+        }
+
+        if (
+          !weightInput ||
+          isNaN(weightInput) ||
+          parseFloat(weightInput) <= 0
+        ) {
+          weightError.textContent = "[!] Enter a valid positive weight";
+        }
+
+        if (!genderInput) {
+          genderError.textContent = "[!] Please select a gender";
+        }
+
+        if (lifestyleInputs.length === 0) {
+          lifestyleError.textContent = "[!] Please select a lifestyle";
+        }
+
+        if (
+          heightError.textContent ||
+          weightError.textContent ||
+          genderError.textContent ||
+          lifestyleError.textContent
+        ) {
+          console.log("Validation failed. Returning without calculating BMI.");
+          var resultElement = document.getElementById("result");
+          resultElement.textContent = "";
+          return;
+        }
+
+        var height = parseFloat(heightInput) / 100;
+        var weight = parseFloat(weightInput);
+        var bmi = weight / (height * height);
+
+        var resultElement = document.getElementById("result");
+        resultElement.textContent =
+          "Your Height is: " +
+          heightInput +
+          "\nYour Weight is: " +
+          weightInput +
+          "\nYour Gender is: " +
+          genderInput.value +
+          "\nYour Lifestyle is: " +
+          getSelectedLifestyles() +
+          "\nYour BMI is: " +
+          bmi.toFixed(2) +
+          "\nStatus: " +
+          getBMIStatus(bmi);
+        console.log("BMI calculation successful");
+      }
+
+      function getSelectedLifestyles() {
+        var selectedLifestyles = [];
+        var lifestyleInputs = document.querySelectorAll(
+          'input[name="lifestyle"]:checked'
+        );
+        lifestyleInputs.forEach(function (input) {
+          selectedLifestyles.push(input.value);
+        });
+        return selectedLifestyles.join(", ");
+      }
+
+      function getBMIStatus(bmi) {
+        if (bmi < 18.5) {
+          return "Underweight";
+        } else if (bmi >= 18.5 && bmi < 24.9) {
+          return "Normal weight";
+        } else if (bmi >= 25 && bmi < 29.9) {
+          return "Overweight";
+        } else {
+          return "Obese";
+        }
+      }
+
+      function updateDateTime() {
+        var dateTimeElement = document.getElementById("datetime");
+        var now = new Date();
+        var dateTimeString =
+          "Current Date and Time: " +
+          now.toLocaleDateString() +
+          " " +
+          now.toLocaleTimeString();
+        dateTimeElement.textContent = dateTimeString;
+      }
+
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
